@@ -27,25 +27,26 @@ public class CheckerService {
     public WebResource check(WebResource webResource) {
         webResourceService.save(webResource);
 
-        removeFromMap(webResource);
+        removeFromMap(webResource.getId());
         webResource.setIsCancelled(false);
         final ScheduledFuture<?> checkScheduler = scheduler.scheduleAtFixedRate(() -> {
             WebSiteResponse response = new Observer(webResource).pingWebsite();
             System.out.println(response.toString());
-        }, 5, 5, TimeUnit.SECONDS);
+        }, 0, 5, TimeUnit.SECONDS); // TODO: clarify monitoring period
         checkerMap.put(webResource.getId(), checkScheduler);
 
         return webResource;
     }
 
-    public void cancel(WebResource webResource) {
-        removeFromMap(webResource);
+    public void cancel(Long id) {
+        removeFromMap(id);
+        WebResource webResource = webResourceService.getById(id);
         webResource.setIsCancelled(true);
         webResourceService.save(webResource);
     }
 
-    private void removeFromMap(WebResource webResource) {
-        Long id = Objects.requireNonNull(webResource.getId());
+    private void removeFromMap(Long id) {
+        id = Objects.requireNonNull(id);
         if (checkerMap.containsKey(id)) {
             checkerMap.remove(id).cancel(true);
         }

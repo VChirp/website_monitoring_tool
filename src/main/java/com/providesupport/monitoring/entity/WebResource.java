@@ -16,11 +16,11 @@ public class WebResource {
     @Id
     @GeneratedValue
     private Long id;
-//    @URL
-//    @NotNull
+    @URL
+    @NotNull
     private String url;
-//    @Valid
-//    @NotNull
+    @Valid
+    @NotNull
     @Embedded
     private MonitoringPeriod monitoringPeriod;
     private int minResponseSize;

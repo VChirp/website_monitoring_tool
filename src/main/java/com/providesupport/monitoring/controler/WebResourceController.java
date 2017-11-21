@@ -5,11 +5,9 @@ import com.providesupport.monitoring.service.CheckerService;
 import com.providesupport.monitoring.service.WebResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -21,14 +19,14 @@ public class WebResourceController {
     private WebResourceService webResourceService;
 
     @PostMapping
-    public WebResource addCheck(WebResource webResource) {
+    public WebResource addCheck(@RequestBody WebResource webResource) {
         return checkerService.check(webResource);
     }
 
     // TODO: cancel by ID or remove method to use addcheck instead
-    @PostMapping("/cancel")
-    public ResponseEntity<Void> cancelCheck(WebResource webResource) {
-        checkerService.cancel(webResource);
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelCheck(@PathVariable Long id) {
+        checkerService.cancel(id);
         return ResponseEntity.ok().build();
     }
 
