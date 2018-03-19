@@ -2,6 +2,7 @@ package com.providesupport.monitoring.service;
 
 import com.providesupport.monitoring.dto.WebSiteResponse;
 import com.providesupport.monitoring.entity.WebResource;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,14 +10,16 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
 
 @Service
+@Data
 public class CheckerService {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final WebResourceService webResourceService;
     private ConcurrentHashMap<Long, ScheduledFuture> checkerMap = new ConcurrentHashMap<>();
+    private Map<String, WebSiteResponse> responseSet = new HashMap<>();
 
     @Autowired
     public CheckerService(WebResourceService webResourceService) {
@@ -31,6 +34,7 @@ public class CheckerService {
         webResource.setIsCancelled(false);
         final ScheduledFuture<?> checkScheduler = scheduler.scheduleAtFixedRate(() -> {
             WebSiteResponse response = new Observer(webResource).pingWebsite();
+            responseSet.put(response.getWebResource().getUrl(), response);
             System.out.println(response.toString());
         }, 0, 5, TimeUnit.SECONDS); // TODO: clarify monitoring period
         checkerMap.put(webResource.getId(), checkScheduler);
@@ -51,6 +55,7 @@ public class CheckerService {
             checkerMap.remove(id).cancel(true);
         }
     }
+
     private static class Observer {
 
 
