@@ -33,7 +33,7 @@ public class WebResourceService {
     }
 
     public WebResource getById(Long id) {
-        WebResource resource = repository.findOne(id);
+        WebResource resource = repository.getOne(id);
         if (resource != null) {
             return resource;
         } else {
