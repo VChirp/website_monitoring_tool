@@ -26,6 +26,7 @@ public class WebResourceController {
     @PostMapping
     public WebResource addCheck(@RequestBody WebResource webResource) {
         System.out.println("Test one");
+        System.out.println("Test two");
         return checkerService.check(webResource);
     }
 
