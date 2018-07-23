@@ -28,6 +28,7 @@ public class WebResourceController {
         System.out.println("Test one");
         System.out.println("Test two");
         System.out.println("test four");
+        System.out.println("test five");
         return checkerService.check(webResource);
     }
 
