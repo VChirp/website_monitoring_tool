@@ -27,8 +27,6 @@ public class WebResourceController {
     public WebResource addCheck(@RequestBody WebResource webResource) {
         System.out.println("Test one");
         System.out.println("Test two");
-        System.out.println("test four");
-        System.out.println("test five");
         System.out.println("test three");
         return checkerService.check(webResource);
     }
